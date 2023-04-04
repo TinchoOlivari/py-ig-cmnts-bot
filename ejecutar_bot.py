@@ -17,26 +17,23 @@ class InstagramBot():
     def __init__(self, friends_usernames=None):
         chrome_options = Options()
         chrome_options.add_argument("--start-maximized")
-        chrome_options.add_experimental_option(
-            "excludeSwitches", ["enable-logging"])
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
         self.browser = webdriver.Chrome(chromedriver, options=chrome_options)
         self.friends_usernames = friends_usernames
 
-    def checkLogin(self):
+    def check_login(self):
         try:
-            WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector(
-                "textarea[placeholder='Agrega un comentario...']"))
+            WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']"))
             return True
         except:
             try:
-                WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector(
-                    "textarea[placeholder='Añade un comentario...']"))
+                WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector("textarea[placeholder='Añade un comentario...']"))
                 return True
             except:
                 return False
 
-    def commentPost(self, tipo_sorteo, parametros):
+    def comment_post(self, tipo_sorteo, parametros):
         inicio_script = time.time()
         lastRandomTime = 0
         comentariosEnviados = 0
@@ -48,34 +45,27 @@ class InstagramBot():
 
         for x in range(cantidadTotalComentarios):
             try:
-                WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector(
-                    "textarea[placeholder='Agrega un comentario...']"))
+                WebDriverWait(self.browser, 7).until(lambda d: d.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']"))
 
-                self.browser.find_element_by_css_selector(
-                    "textarea[placeholder='Agrega un comentario...']").clear()
-                self.browser.find_element_by_css_selector(
-                    "textarea[placeholder='Agrega un comentario...']").click()
+                self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").clear()
+                self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").click()
 
                 if (tipo_sorteo == 1):
                     for z in range(parametros[0]):
                         tempUser = self.friends_usernames[x - z]
-                        self.browser.find_element_by_css_selector(
-                            "textarea[placeholder='Agrega un comentario...']").send_keys(tempUser, ' ')
+                        self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").send_keys(tempUser, ' ')
                         time.sleep(1)
 
                 elif (tipo_sorteo == 2):
-                    self.browser.find_element_by_css_selector(
-                        "textarea[placeholder='Agrega un comentario...']").send_keys(parametros[0])
+                    self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").send_keys(parametros[0])
 
                 else:
                     for z in range(parametros[0]):
                         tempUser = self.friends_usernames[x - z]
-                        self.browser.find_element_by_css_selector(
-                            "textarea[placeholder='Agrega un comentario...']").send_keys(tempUser, ' ')
+                        self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").send_keys(tempUser, ' ')
                         time.sleep(1)
 
-                    self.browser.find_element_by_css_selector(
-                        "textarea[placeholder='Agrega un comentario...']").send_keys(str(" " + parametros[1]))
+                    self.browser.find_element_by_css_selector("textarea[placeholder='Agrega un comentario...']").send_keys(str(" " + parametros[1]))
 
                 time.sleep(2)
 
@@ -107,8 +97,7 @@ class InstagramBot():
 
                 except:
                     os.system("cls")
-                    print(
-                        (Fore.LIGHTRED_EX + "\nERROR #5: El boton de enviar comentarios no es clickeable."))
+                    print((Fore.LIGHTRED_EX + "\nERROR #5: El boton de enviar comentarios no es clickeable."))
                     print("\t- ¿Utilizaste mucho el bot ultimamente?")
                     print("\t- ¿Estas en la publicacion?")
                     print("\t- ¿Alguno/s de los que etiquetaste te bloqueo?")
@@ -116,8 +105,7 @@ class InstagramBot():
 
             except:
                 os.system("cls")
-                print(
-                    (Fore.LIGHTRED_EX + "\nERROR #6: No se puede escribir el comentario."))
+                print((Fore.LIGHTRED_EX + "\nERROR #6: No se puede escribir el comentario."))
                 print("\t- ¿Utilizaste mucho el bot ultimamente?")
                 print("\t- ¿La publicacion permite comentarios?")
                 print("\t- ¿Estas en la publicacion?")
@@ -125,11 +113,10 @@ class InstagramBot():
 
         fin_script = time.time()
 
-        print("Script terminado", "Duracion: " +
-              str(datetime.timedelta(seconds=round(fin_script-inicio_script, 0))))
+        print("Script terminado", "Duracion: " + str(datetime.timedelta(seconds=round(fin_script-inicio_script, 0))))
         print("Comentarios realizados: " + str(comentariosEnviados))
 
-    def loadCookies(self):
+    def load_cookies(self):
         self.browser.get("https://www.instagram.com/")
 
         try:
@@ -143,46 +130,38 @@ class InstagramBot():
             print("- Warning: No hay cookies. Deberas iniciar sesion!\n")
 
 
-def SiNoInput():
-    rta = input((Fore.LIGHTGREEN_EX + "[s] SI") + (Fore.RESET + " | ") + (
-        Fore.LIGHTRED_EX + "[n] NO ") + (Fore.RESET + ">> "))
+def make_decision():
+    rta = input((Fore.LIGHTGREEN_EX + "[s] SI") + (Fore.RESET + " | ") + (Fore.LIGHTRED_EX + "[n] NO ") + (Fore.RESET + ">> "))
     if rta.lower().strip() in ["s", "si", "y", "yes"]:
         return 1
     else:
         return 0
 
 
-def menuTipoSorteo():
+def giveaway_type_menu():
     parametros = []
     while True:
-        print("\n# PASO 2: ¿Que " + (Fore.YELLOW + "tipo") +
-              (Fore.WHITE + " de sorteo es?"))
-        print("  1 - Solo mencionar a otros usuarios                " +
-              (Fore.LIGHTBLACK_EX + "@pablo_sanchez @juancarlos1 @pepe.gomez"))
-        print("  2 - Solo comentar datos                            " +
-              (Fore.LIGHTBLACK_EX + "Ultimos 3 del dni"))
-        print("  3 - Mencionar usuarios y datos                     " +
-              (Fore.LIGHTBLACK_EX + "@pablo_sanchez Sucursal Cerro"))
+        print("\n# PASO 2: ¿Que " + (Fore.YELLOW + "tipo") + (Fore.WHITE + " de sorteo es?"))
+        print("  1 - Solo mencionar a otros usuarios. " + (Fore.LIGHTBLACK_EX + "@pablo_sanchez @juancarlos1 @pepe.gomez"))
+        print("  2 - Solo comentar datos.             " + (Fore.LIGHTBLACK_EX + "Ultimos 3 del dni"))
+        print("  3 - Mencionar usuarios y datos.      " + (Fore.LIGHTBLACK_EX + "@pablo_sanchez Sucursal Cerro"))
         print("  9 - Salir")
         opcionMenu = input("\nIngresar una opcion >> ").strip()
 
         if opcionMenu == "1":
             while True:
                 os.system("cls")
-                print(
-                    (Fore.YELLOW + "Tipo 1 de sorteo: 'Solo mencionar a otros usuarios'"))
+                print((Fore.YELLOW + "Tipo 1 de sorteo: 'Solo mencionar a otros usuarios'"))
                 try:
-                    cantidad_usuarios = int(
-                        input("Cantidad de usuarios por comentario >> ").strip())
+                    cantidad_usuarios = int(input("Cantidad de usuarios por comentario >> ").strip())
                     if cantidad_usuarios <= 0:
-                        input("\nDebes ingresar un numero mayor a cero." +
-                              ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
+                        input("\nDebes ingresar un numero mayor a cero." + ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
 
                     else:
                         print("\n¿Estas seguro?")
 
                         while True:
-                            si_no = SiNoInput()
+                            si_no = make_decision()
                             if si_no == 1:
                                 parametros.append(cantidad_usuarios)
                                 return 1, parametros
@@ -199,18 +178,16 @@ def menuTipoSorteo():
                 dato_comentario = input("Datos a comentar >> ").strip()
 
                 try:
-                    cantidad_comentarios = int(
-                        input("Cantidad de comentario a enviar >> ").strip())
+                    cantidad_comentarios = int(input("Cantidad de comentario a enviar >> ").strip())
                     if cantidad_comentarios <= 0:
-                        input("\nDebes ingresar un numero mayor a cero." +
-                              ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
+                        input("\nDebes ingresar un numero mayor a cero." + ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
 
                     else:
                         if dato_comentario != "":
                             print("\n¿Estas seguro?")
 
                             while True:
-                                si_no = SiNoInput()
+                                si_no = make_decision()
                                 if si_no == 1:
                                     parametros.append(dato_comentario)
                                     parametros.append(cantidad_comentarios)
@@ -226,11 +203,9 @@ def menuTipoSorteo():
                 print((Fore.YELLOW + "Tipo 3 de sorteo: 'Mencionar usuarios y datos'"))
 
                 try:
-                    cantidad_usuarios = int(
-                        input("Cantidad de usuarios por comentario >> ").strip())
+                    cantidad_usuarios = int(input("Cantidad de usuarios por comentario >> ").strip())
                     if cantidad_usuarios <= 0:
-                        input("\nDebes ingresar un numero mayor a cero." +
-                              ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
+                        input("\nDebes ingresar un numero mayor a cero." + ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
 
                     else:
                         dato_comentario = input("Datos a comentar >> ").strip()
@@ -239,7 +214,7 @@ def menuTipoSorteo():
                             print("\n¿Estas seguro?")
 
                             while True:
-                                si_no = SiNoInput()
+                                si_no = make_decision()
                                 if si_no == 1:
                                     parametros.append(cantidad_usuarios)
                                     parametros.append(dato_comentario)
@@ -251,13 +226,12 @@ def menuTipoSorteo():
                     pass
 
         elif opcionMenu == "9":
-            mensajeSalida()
+            press_enter_to_exit()
         else:
-            input("\nDebes ingresar un numero valido => [1, 2, 3, 9]." + (
-                (Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
+            input("\nDebes ingresar un numero valido => [1, 2, 3, 9]." + ((Fore.GREEN + "\nEnter") + (Fore.WHITE + " para reintentar")))
 
 
-def checkFriendsFile():
+def check_friends_file():
     friends_usernames = []
     try:
         with open('friends_usernames.txt', encoding='utf8') as f:
@@ -266,37 +240,37 @@ def checkFriendsFile():
                     friends_usernames.append(line.strip())
 
                 elif (' ' in line.strip()):
-                    print('"' + str(line.strip()) + '"' +
-                          " tiene un espacio entremedio, corregilo!")
+                    print('"' + str(line.strip()) + '"' + " tiene un espacio entremedio, corregilo!")
 
                 elif (not line.isspace()):
                     friends_usernames.append("@" + line.strip())
 
     except IOError:
-        print((Fore.LIGHTRED_EX + "ERROR #1: El archivo ") + (Fore.YELLOW +
-                                                              "friends_usernames.txt") + (Fore.LIGHTRED_EX + " no se puede leer."))
+        print((Fore.LIGHTRED_EX + "ERROR #1: El archivo ") + (Fore.YELLOW + "friends_usernames.txt") + (Fore.LIGHTRED_EX + " no se puede leer."))
         print("\t- ¿Esta creado?")
         print("\t- ¿Tiene otro nombre?")
-        mensajeSalida()
+        press_enter_to_exit()
 
     if (len(friends_usernames) == 0):
-        print((Fore.LIGHTRED_EX + "ERROR #2: Debes agregar nombres de usuarios en ") +
-              (Fore.YELLOW + "friends_usernames.txt"))
-        mensajeSalida()
+        print((Fore.LIGHTRED_EX + "ERROR #2: Debes agregar nombres de usuarios en ") + (Fore.YELLOW + "friends_usernames.txt"))
+        press_enter_to_exit()
 
     return friends_usernames
 
 
-def enterParaSeguir():
+def press_enter_to_continue():
     print(Fore.GREEN + "\n\n           - Toca ENTER para seguir -          ")
     input()
 
 
-def mensajeSalida():
+def press_enter_to_exit():
     print(Fore.LIGHTRED_EX + "\n\n            - Toca ENTER para salir -          ")
     input()
     sys.exit()
-    # os.system("shutdown /s /t 1")
+
+
+def turn_off_pc():
+    os.system("shutdown /s /t 1")
 
 
 def main():
@@ -304,38 +278,45 @@ def main():
     print("# PASO 0: " + (Fore.YELLOW + "INICIANDO GOOGLE CHROME... -"))
 
     # 1 - Load friends
-    friends_usernames = checkFriendsFile()
+    friends_usernames = check_friends_file()
 
     # 2 - Init Bot
     bot = InstagramBot(friends_usernames=friends_usernames)
 
     # 3 - Check cookies
-    bot.loadCookies()
+    bot.load_cookies()
 
     # 4 - Login and enter post
     print("# PASO 1: " + (Fore.YELLOW + "Iniciar Sesion y busca la publicacion"))
-    enterParaSeguir()
+    press_enter_to_continue()
 
     # 5 - Save cookies
     while True:
-        if (bot.checkLogin()):
+        if (bot.check_login()):
             pickle.dump(bot.browser.get_cookies(), open("cookies.pkl", "wb"))
 
             # 6 - Select type of giveaway and params
-            tipo_sorteo, params = menuTipoSorteo()
+            tipo_sorteo, params = giveaway_type_menu()
+
+            print("\n# PASO 3: ¿" + (Fore.RED + "APAGAR") +
+                  (Fore.WHITE + " pc despues de terminar?"))
+            turn_off_on_exit = make_decision()
 
             # 7 - Comments
-            bot.commentPost(tipo_sorteo, params)
+            bot.comment_post(tipo_sorteo, params)
 
             break
 
         else:
             print((Fore.LIGHTBLUE_EX + "\n- Warning: " +
-                   (Fore.WHITE + "Parece que NO iniciaste sesion!")))
-            enterParaSeguir()
+                  (Fore.WHITE + "Parece que NO iniciaste sesion!")))
+            press_enter_to_continue()
 
     # 8 - Quit
-    mensajeSalida()
+    if turn_off_on_exit == 1:
+        turn_off_pc()
+    else:
+        press_enter_to_exit()
 
 
 main()
